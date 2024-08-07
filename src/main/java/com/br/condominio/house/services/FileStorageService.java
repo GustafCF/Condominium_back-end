@@ -1,6 +1,5 @@
 package com.br.condominio.house.services;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,7 +24,7 @@ public class FileStorageService {
         this.fileStorageLocation = Paths.get(fileStorageConfig.getUploadDir()).toAbsolutePath().normalize();
         try{
             Files.createDirectories(this.fileStorageLocation);
-        }catch(IOException e){
+        }catch(Exception e){
             throw new FileStorageException("Could not the directory where the upload files will be stored", e);            
         }
     }
@@ -43,7 +42,7 @@ public class FileStorageService {
 
             return fileName;
         }
-        catch(IOException e){
+        catch(Exception e){
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", e);
         }
     }

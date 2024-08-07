@@ -1,5 +1,9 @@
 package com.br.condominio.house.controllers;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +29,16 @@ public class FileController {
         return new UploadFileModel(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
-    // Requisição com Response En 
-    // @PostMapping("/uploadFile")
+    @PostMapping(value = "/vs1")
+    public List<UploadFileModel> uploadMultipleFiles(@RequestParam("file") MultipartFile[] files){
+        return Arrays.asList(files)
+        .stream()
+        .map(file -> uploadFile(file))
+        .collect(Collectors.toList());
+    }
+
+    // Requisição com ResponseEntity
+    // @PostMapping("/v2")
     // public ResponseEntity<String> uploadFile1(@RequestParam("file") MultipartFile file) {
     //     try {
     //         String fileName = service.storeFile(file);
@@ -35,5 +47,7 @@ public class FileController {
     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao armazenar o arquivo: " + e.getMessage());
     //     }
     // }
+
+    
 
 }
