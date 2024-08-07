@@ -30,7 +30,7 @@ public class FileStorageService {
         }
     }
 
-    public String storageFile(MultipartFile file){
+    public String storeFile(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try{
