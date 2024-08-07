@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.br.condominio.house.models.UploadFileModel;
 import com.br.condominio.house.services.FileStorageService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/docs")
 public class FileController {
@@ -29,8 +31,9 @@ public class FileController {
         return new UploadFileModel(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
+    //upload de vários arquivos
     @PostMapping(value = "/vs1")
-    public List<UploadFileModel> uploadMultipleFiles(@RequestParam("file") MultipartFile[] files){
+    public List<UploadFileModel> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files){
         return Arrays.asList(files)
         .stream()
         .map(file -> uploadFile(file))
@@ -48,6 +51,5 @@ public class FileController {
     //     }
     // }
 
-    
 
 }
