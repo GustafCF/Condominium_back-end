@@ -39,7 +39,7 @@ public class FileController {
     @PostMapping(value ="/v1")
     public UploadFileModel uploadFile(@RequestParam("file") MultipartFile file){
         String fileName = service.storeFile(file);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/docs/downloadFile/").path(fileName).toUriString();
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/downloadFile/").path(fileName).toUriString();
         return new UploadFileModel(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
@@ -53,7 +53,7 @@ public class FileController {
     }
 
     //download de arquivos
-    @GetMapping(value = "/downloadFile/{fileName:.+}")
+    @GetMapping(value = "vs1/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request){
 
         Resource resource = service.loadFileAsResource(fileName);
