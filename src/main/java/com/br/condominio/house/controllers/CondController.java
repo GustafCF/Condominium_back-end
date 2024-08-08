@@ -31,7 +31,7 @@ public class CondController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value="{id}")
+    @GetMapping(value="/{id}")
     public ResponseEntity<CondModel> findById(@PathVariable UUID id){
         CondModel obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
