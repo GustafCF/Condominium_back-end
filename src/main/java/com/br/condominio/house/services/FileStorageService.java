@@ -16,7 +16,6 @@ import com.br.condominio.house.config.FileStorageConfig;
 import com.br.condominio.house.controllers.exceptions.FileStorageException;
 import com.br.condominio.house.controllers.exceptions.MyFileNotFoundException;
 
-
 @Service
 public class FileStorageService {
 
