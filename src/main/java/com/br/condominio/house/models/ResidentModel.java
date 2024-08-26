@@ -26,6 +26,8 @@ public class ResidentModel implements Serializable {
     private UUID id;
     @Column(name = "Nome")
     private String residentName;
+    @Column(name = "Sobrenome")
+    private String lastName;
     @Column(name = "Data_Nascimento")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
@@ -43,12 +45,12 @@ public class ResidentModel implements Serializable {
     public ResidentModel() {
     }
 
-    
-    public ResidentModel(UUID id, String residentName, LocalDate dataNascimento,
+    public ResidentModel(UUID id, String residentName, String lastName, LocalDate dataNascimento,
             @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
             @CPF(message = "CPF inválido") String cpf) {
         this.id = id;
         this.residentName = residentName;
+        this.lastName = lastName;
         this.dataNascimento = dataNascimento;
         this.age = age;
         this.proprietario = proprietario;
@@ -60,71 +62,65 @@ public class ResidentModel implements Serializable {
         return id;
     }
 
-
     public void setId(UUID id) {
         this.id = id;
     }
-
 
     public String getResidentName() {
         return residentName;
     }
 
-
     public void setResidentName(String residentName) {
         this.residentName = residentName;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
-
 
     public int getAge() {
         return age;
     }
 
-
     public void setAge(int age) {
         this.age = age;
     }
-
 
     public Boolean getProprietario() {
         return proprietario;
     }
 
-
     public void setProprietario(Boolean proprietario) {
         this.proprietario = proprietario;
     }
-
 
     public String getRg() {
         return rg;
     }
 
-
     public void setRg(String rg) {
         this.rg = rg;
     }
-
 
     public String getCpf() {
         return cpf;
     }
 
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
 
     @Override
     public int hashCode() {
