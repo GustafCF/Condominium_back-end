@@ -10,7 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.br.condominio.house.models.ResidentModel;
-import com.br.condominio.house.repositories.ResidentRespository;
+import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
@@ -20,7 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class ResidentService {
 
     @Autowired
-    private ResidentRespository repository;
+    private ResidentRepository repository;
 
     public List<ResidentModel> findAll(){
         return repository.findAll();

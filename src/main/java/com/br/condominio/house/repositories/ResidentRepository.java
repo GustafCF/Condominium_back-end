@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.br.condominio.house.models.ResidentModel;
 
 @Repository
-public interface ResidentRespository extends JpaRepository<ResidentModel, UUID > {
+public interface ResidentRepository extends JpaRepository<ResidentModel, UUID > {
     List<ResidentModel> findByResidentName(String residentName);
 
 }

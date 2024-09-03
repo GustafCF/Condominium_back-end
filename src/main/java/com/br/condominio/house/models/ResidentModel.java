@@ -2,17 +2,21 @@ package com.br.condominio.house.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
@@ -41,6 +45,10 @@ public class ResidentModel implements Serializable {
     @Column(name = "CPF")
     @CPF(message = "CPF inválido")
     private String cpf;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner")
+    private List<CarModel> car = new ArrayList<>();
     
     public ResidentModel() {
     }
@@ -120,6 +128,14 @@ public class ResidentModel implements Serializable {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public List<CarModel> getCar() {
+        return car;
+    }
+
+    public void setCar(List<CarModel> car) {
+        this.car = car;
     }
 
     @Override
