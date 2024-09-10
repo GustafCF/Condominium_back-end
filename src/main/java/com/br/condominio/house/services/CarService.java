@@ -55,22 +55,22 @@ public class CarService {
         }  
     }
 
-    public CarModel update(Long id, CarModel obj){
-        try{
-            CarModel entity = repository.getReferenceById(id);
-            updateData(entity, obj);
-            return repository.save(entity); 
-        } catch(EntityNotFoundException e){
-            throw new ResourceNotFoundException(id);
-        }
-    }
+    // public CarModel update(Long id, CarModel obj){
+    //     try{
+    //         CarModel entity = repository.getReferenceById(id);
+    //         updateData(entity, obj);
+    //         return repository.save(entity); 
+    //     } catch(EntityNotFoundException e){
+    //         throw new ResourceNotFoundException(id);
+    //     }
+    // }
 
-    private void updateData(CarModel obj, CarModel entity){
-        entity.setModel(obj.getModel());
-        entity.setBrand(obj.getBrand());
-        entity.setType(obj.getType());
-        entity.setPlate(obj.getPlate());
-        entity.setAno(obj.getAno());
-    }
+    // private void updateData(CarModel obj, CarModel entity){
+    //     entity.setModel(obj.getModel());
+    //     entity.setBrand(obj.getBrand());
+    //     entity.setType(obj.getType());
+    //     entity.setPlate(obj.getPlate());
+    //     entity.setAno(obj.getAno());
+    // }
 
 }

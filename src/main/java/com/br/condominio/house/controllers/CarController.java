@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,24 +32,23 @@ public class CarController {
         return ResponseEntity.ok().body(obj);
     }
 
-    // @PostMapping("/register")
-    // public ResponseEntity<CarModel> insert(@RequestBody CarModel car){
-    //     CarModel obj = service.insert(car);
-    //     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-    //     return ResponseEntity.created(uri).body(obj);
-    // }
-
-    // @PostMapping
-    // public ResponseEntity<CarModel> insert(@RequestBody CarModel car){
-    //     CarModel obj = service.insert(car);
-    //     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-    //     return ResponseEntity.created(uri).body(obj);
-    // }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CarModel> findById(@PathVariable Long id){
+        CarModel obj = service.findById(id);
+        return ResponseEntity.ok().body(obj);
+    }
 
     @PostMapping("/register/{residentId}")
     public ResponseEntity<CarModel> registerCar(@PathVariable UUID residentId, @RequestBody CarModel carModel) {
             CarModel savedCar = service.registerCarForResident(residentId, carModel);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCar.getId()).toUri();
             return ResponseEntity.created(uri).body(savedCar);
-    }        
+    }  
+    
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -28,7 +28,7 @@ public class FileStorageService {
         try{
             Files.createDirectories(this.fileStorageLocation);
         }catch(Exception e){
-            throw new FileStorageException("Could not the directory where the upload files will be stored", e);            
+            throw new FileStorageException("Não foi possível o diretório onde os arquivos de upload serão armazenados", e);            
         }
     }
 
@@ -37,7 +37,7 @@ public class FileStorageService {
 
         try{
             if(fileName.contains("..")){
-                throw new FileStorageException("Sorry! Filename contains invalid oath sequence " + fileName);
+                throw new FileStorageException("Desculpe! O nome do arquivo contém sequência de juramento inválida " + fileName);
             }
 
             Path targetLocation = this.fileStorageLocation.resolve(fileName);

@@ -3,7 +3,9 @@ package com.br.condominio.house.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -11,11 +13,13 @@ import org.hibernate.validator.constraints.br.CPF;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
@@ -47,15 +51,19 @@ public class ResidentModel implements Serializable {
     private String cpf;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<CarModel> car = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "fathers", cascade = CascadeType.ALL)
+    private Set<DependentModel> dependent = new HashSet<>(); 
     
     public ResidentModel() {
     }
 
     public ResidentModel(UUID id, String residentName, String lastName, LocalDate dataNascimento,
-            @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
-            @CPF(message = "CPF inválido") String cpf) {
+        @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
+        @CPF(message = "CPF inválido") String cpf) {
         this.id = id;
         this.residentName = residentName;
         this.lastName = lastName;
@@ -134,8 +142,8 @@ public class ResidentModel implements Serializable {
         return car;
     }
 
-    public void setCar(List<CarModel> car) {
-        this.car = car;
+    public Set<DependentModel> getDependent() {
+        return dependent;
     }
 
     @Override

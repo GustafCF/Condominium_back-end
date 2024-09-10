@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.br.condominio.house.models.ResidentModel;
+import com.br.condominio.house.models.DependentModel;
 
 @Repository
-public interface ResidentRepository extends JpaRepository<ResidentModel, UUID > {
-    List<ResidentModel> findByResidentName(String residentName);
+public interface DependentRepository extends JpaRepository<DependentModel, UUID> {
+    List<DependentModel> findByName(String name);
 }

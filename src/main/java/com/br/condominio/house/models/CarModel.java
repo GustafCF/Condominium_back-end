@@ -2,8 +2,7 @@ package com.br.condominio.house.models;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,15 +12,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Carros")
+@Table(name = "TB_CARROS")
 public class CarModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String model;
     private String brand;
+    private String model;
     private String type;
     private String plate;
     private int ano;
@@ -33,14 +32,14 @@ public class CarModel implements Serializable {
     public CarModel() {
     }
 
-    public CarModel(Long id, String model, String brand, String type, String plate, int ano,  ResidentModel owner) {
+    public CarModel(Long id, String brand, String model, String type, String plate, int ano, ResidentModel owner) {
         this.id = id;
-        this.model = model;
         this.brand = brand;
+        this.model = model;
         this.type = type;
         this.plate = plate;
         this.ano = ano;
-        this.owner =  owner;
+        this.owner = owner;
     }
 
     public Long getId() {
@@ -51,20 +50,20 @@ public class CarModel implements Serializable {
         this.id = id;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public String getBrand() {
         return brand;
     }
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getType() {
