@@ -9,9 +9,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.br.condominio.house.models.ApartmentModel;
 import com.br.condominio.house.models.ResidentModel;
+import com.br.condominio.house.repositories.ApartmentRepository;
 import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
+import com.br.condominio.house.services.exceptions.ResourceApException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,12 +24,15 @@ public class ResidentService {
 
     @Autowired
     private ResidentRepository repository;
+    @Autowired
+    private ApartmentRepository apartmentRepository;
+    
 
     public List<ResidentModel> findAll(){
         return repository.findAll();
     }
 
-    public ResidentModel findById(UUID id){
+    public ResidentModel findById(Long id){
         Optional<ResidentModel> obj = repository.findById(id);
         return obj.orElseThrow(()-> new ResourceNotFoundException(id));
     }
@@ -35,11 +41,17 @@ public class ResidentService {
         return repository.findByResidentName(name);
     }
 
-    public ResidentModel insert (ResidentModel entity){
-        return repository.save(entity);
+    public ResidentModel insert (int ap, ResidentModel entity){
+        List<ApartmentModel> apart = apartmentRepository.findByApartment(ap);
+        if (apart.isEmpty()) {
+            throw new ResourceApException(ap);
+        } else{
+            entity.getAp().addAll(apart);
+            return repository.save(entity);
+        }
     }
 
-    public void delete(UUID id){
+    public void delete(Long id){
         try{
             repository.deleteById(id);
         }catch(EmptyResultDataAccessException e){
@@ -49,7 +61,7 @@ public class ResidentService {
         }    
     }
 
-    public ResidentModel update(UUID id, ResidentModel entity){
+    public ResidentModel update(Long id, ResidentModel entity){
         try{
             ResidentModel obj = repository.getReferenceById(id);
             updateData(obj, entity);
@@ -68,5 +80,7 @@ public class ResidentService {
         entity.setRg(obj.getRg());
         entity.setCpf(obj.getCpf());
     }
+
+    
 
 }

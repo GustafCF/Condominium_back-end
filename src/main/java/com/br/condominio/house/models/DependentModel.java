@@ -2,12 +2,16 @@ package com.br.condominio.house.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,8 +30,8 @@ public class DependentModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Column(name = "Nome")
     private String name;
     @Column(name = "Sobrenome")
@@ -43,13 +47,17 @@ public class DependentModel implements Serializable {
     //A anotação fetch define como as entidades relacionadas devem ser carregadas do banco de dados.
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_son_father", joinColumns = @JoinColumn(name = "son_id"), inverseJoinColumns = @JoinColumn(name = "fathers_id"))
-    private Set<ResidentModel> fathers = new HashSet<>();
+    private List<ResidentModel> fathers = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "TB_AP_OCC_DEPENDENT", joinColumns = @JoinColumn(name = "dependent_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
+    private Set<ApartmentModel> ap_son =  new HashSet<>();
 
     public DependentModel() {
     }
 
-    public DependentModel(UUID id, String name, String lastName, LocalDate dateBirth,
-        @Min(value = 0, message = "A idade não pode ser negativa") int age, Set<ResidentModel> fathers) {
+    public DependentModel(Long id, String name, String lastName, LocalDate dateBirth,
+        @Min(value = 0, message = "A idade não pode ser negativa") int age, List<ResidentModel> fathers) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -58,11 +66,11 @@ public class DependentModel implements Serializable {
         this.fathers = fathers;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -94,14 +102,14 @@ public class DependentModel implements Serializable {
         return age;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Set<ResidentModel> getFathers() {
+    public List<ResidentModel> getFathers() {
         return fathers;
     }
 
+    public Set<ApartmentModel> getAp_son() {
+        return ap_son;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

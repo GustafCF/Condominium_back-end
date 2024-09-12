@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.br.condominio.house.models.DependentModel;
 
 @Repository
-public interface DependentRepository extends JpaRepository<DependentModel, UUID> {
+public interface DependentRepository extends JpaRepository<DependentModel, Long> {
     List<DependentModel> findByName(String name);
 }

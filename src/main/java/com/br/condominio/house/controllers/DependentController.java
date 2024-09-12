@@ -33,36 +33,34 @@ public class DependentController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<DependentModel> findById(@PathVariable UUID id){
+    public ResponseEntity<DependentModel> findById(@PathVariable Long id){
         DependentModel obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/name/{name}")
     public ResponseEntity<List<DependentModel>> findByName(@PathVariable String name){
         List<DependentModel> list = service.findByName(name);
         return ResponseEntity.ok().body(list);
     }
 
-
     @PostMapping(value = "/{id}")
-    public ResponseEntity<DependentModel> insert(@PathVariable UUID id, @RequestBody DependentModel entity){
+    public ResponseEntity<DependentModel> insert(@PathVariable Long id, @RequestBody DependentModel entity){
         var obj = service.insert(id, entity);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping()
-    public ResponseEntity<DependentModel> update(@PathVariable UUID id, @RequestBody DependentModel obj){
+    public ResponseEntity<DependentModel> update(@PathVariable Long id, @RequestBody DependentModel obj){
         DependentModel entity = service.update(id, obj);
         return ResponseEntity.ok().body(entity);
     }
-
 
 }

@@ -2,16 +2,18 @@ package com.br.condominio.house.config;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.HashSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.mapping.Array;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.br.condominio.house.models.ApartmentModel;
 import com.br.condominio.house.models.CarModel;
 import com.br.condominio.house.models.DependentModel;
 import com.br.condominio.house.models.ResidentModel;
+import com.br.condominio.house.repositories.ApartmentRepository;
 import com.br.condominio.house.repositories.CarRepository;
 import com.br.condominio.house.repositories.DependentRepository;
 import com.br.condominio.house.repositories.ResidentRepository;
@@ -20,38 +22,64 @@ import com.br.condominio.house.repositories.ResidentRepository;
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
 
-    @Autowired
     private ResidentRepository residentRepository;
-
-    @Autowired
     private CarRepository carRepository;
-
-    @Autowired
     private DependentRepository dependentRepository;
+    private ApartmentRepository apartmentRepository;
+
+    public TestConfig(ResidentRepository residentRepository, CarRepository carRepository, DependentRepository dependentRepository, ApartmentRepository apartmentRepository){
+        this.residentRepository = residentRepository;
+        this.carRepository = carRepository;
+        this.dependentRepository = dependentRepository;
+        this.apartmentRepository = apartmentRepository;
+    }
 
     @Override
     public void run(String... args) throws Exception {
         
-        dependentRepository.deleteAll();
         carRepository.deleteAll();
+        dependentRepository.deleteAll();
         residentRepository.deleteAll();
+        apartmentRepository.deleteAll();
+        
+        ApartmentModel p1 = new ApartmentModel(0L, 101, "A");
+        ApartmentModel p2 = new ApartmentModel(0L, 102, "A");
+        ApartmentModel p3 = new ApartmentModel(0L, 103, "A");
+        ApartmentModel p4 = new ApartmentModel(0L, 104, "A");
+        ApartmentModel p5 = new ApartmentModel(0L, 105, "A");
+        ApartmentModel p6 = new ApartmentModel(0L, 106, "A");
+        ApartmentModel p7 = new ApartmentModel(0L, 201, "B");
+        ApartmentModel p8 = new ApartmentModel(0L, 202, "B");
+        ApartmentModel p9 = new ApartmentModel(0L, 203, "B");
+        ApartmentModel p10 = new ApartmentModel(0L, 204, "B");
+        ApartmentModel p11 = new ApartmentModel(0L, 205, "B");
+        ApartmentModel p12 = new ApartmentModel(0L, 206, "B");
+
+        apartmentRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12));
 
         ResidentModel r1 = new ResidentModel(null, "Mariana", "Huyla Alves Miranda Ribeiro", LocalDate.of(2002, 8, 30), 22 , true, "44453671172", "56048536151");
         ResidentModel r2 = new ResidentModel(null, "Gustavo", "Cesar Franco", LocalDate.of(2001, 2, 1), 23, true, "122560127", "50388175133");
         ResidentModel r3 = new ResidentModel(null, "Vitória", "Higino", LocalDate.of(2002, 9, 11), 22, true, "171928192", "39699335106");
         ResidentModel r4 = new ResidentModel(null, "Pedro", "Henrique Ramos Cardoso", LocalDate.of(2002, 1, 11), 22, true, "120850485", "44453671172");
 
+        residentRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
+
+        DependentModel m1 = new DependentModel(null, "Verônica", "Alves Franco", LocalDate.of(2024, 12, 25), 0, Arrays.asList(r1,r2));
+
+        dependentRepository.save(m1);
+
         CarModel c1 = new CarModel(0L, "Audi", "A4", "Sedan", "placa-1", 2024, r1);
         CarModel c2 = new CarModel(0L, "Toyota", "Camry", "Sedan", "placa-2", 2023, r1);
         CarModel c3 = new CarModel(0L, "BMW", "X5", "SUV", "placa-3", 2022, r2);
         CarModel c4 = new CarModel(0L, "Tesla", "Model 3", "Hatchback elétrico", "placa-4", 2024, r4);
-
-        residentRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
+       
         carRepository.saveAll(Arrays.asList(c1, c2, c3, c4));
 
-        DependentModel m1 = new DependentModel(null, "Verônica", "Alves Franco", LocalDate.of(2024, 12, 25), 0, Set.of(r1, r2));
-
-        dependentRepository.save(m1);
+        r1.getAp().add(p12);
+        r2.getAp().add(p12);
+        
+        residentRepository.saveAll(Arrays.asList(r1,r2));
+        
     }
 
 }

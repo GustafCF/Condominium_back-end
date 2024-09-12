@@ -26,7 +26,7 @@ public class DependentService {
         return repository.findAll();
     }
 
-    public DependentModel findById(UUID id){
+    public DependentModel findById(Long id){
         Optional<DependentModel> obj = repository.findById(id);
         return obj.orElseThrow(()-> new ResourceNotFoundException(id));
     }
@@ -35,18 +35,18 @@ public class DependentService {
         return repository.findByName(name);
     }
 
-    public DependentModel insert(UUID id, DependentModel entity){
+    public DependentModel insert(Long id, DependentModel entity){
         ResidentModel r = residentRepository.findById(id)
         .orElseThrow(()-> new ResourceNotFoundException(id));
         entity.getFathers().add(r);
         return repository.save(entity);
     }
 
-    public void delete(UUID id){
+    public void delete(Long id){
         repository.deleteById(id);
     }
 
-    public DependentModel update(UUID id, DependentModel entity){
+    public DependentModel update(Long id, DependentModel entity){
         DependentModel obj = repository.getReferenceById(id);
         updateData(obj, entity);
         return repository.save(obj);

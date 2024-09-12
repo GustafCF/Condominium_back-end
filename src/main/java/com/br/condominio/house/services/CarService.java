@@ -16,7 +16,6 @@ import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -38,7 +37,7 @@ public class CarService {
     }
 
     @Transactional
-    public CarModel registerCarForResident(UUID residentId, CarModel carModel) { 
+    public CarModel registerCarForResident(Long residentId, CarModel carModel) { 
         ResidentModel resident = residentRepository.findById(residentId)
             .orElseThrow(() -> new RuntimeException("Resident not found with id: " + residentId));
         carModel.setOwner(resident);

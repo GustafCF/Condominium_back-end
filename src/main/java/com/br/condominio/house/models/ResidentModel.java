@@ -3,11 +3,10 @@ package com.br.condominio.house.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,9 +15,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -30,8 +32,8 @@ public class ResidentModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Column(name = "Nome")
     private String residentName;
     @Column(name = "Sobrenome")
@@ -56,12 +58,16 @@ public class ResidentModel implements Serializable {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "fathers", cascade = CascadeType.ALL)
-    private Set<DependentModel> dependent = new HashSet<>(); 
-    
+    private List<DependentModel> dependent = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "TB_AP_RESIDENT", joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
+    private Set<ApartmentModel> ap = new HashSet<>();
+
     public ResidentModel() {
     }
 
-    public ResidentModel(UUID id, String residentName, String lastName, LocalDate dataNascimento,
+    public ResidentModel(Long id, String residentName, String lastName, LocalDate dataNascimento,
         @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
         @CPF(message = "CPF inválido") String cpf) {
         this.id = id;
@@ -72,13 +78,15 @@ public class ResidentModel implements Serializable {
         this.proprietario = proprietario;
         this.rg = rg;
         this.cpf = cpf;
+        
     }
 
-    public UUID getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -142,8 +150,12 @@ public class ResidentModel implements Serializable {
         return car;
     }
 
-    public Set<DependentModel> getDependent() {
+    public List<DependentModel> getDependent() {
         return dependent;
+    }
+
+    public Set<ApartmentModel> getAp(){
+        return ap;
     }
 
     @Override

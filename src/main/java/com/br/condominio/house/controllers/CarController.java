@@ -39,7 +39,7 @@ public class CarController {
     }
 
     @PostMapping("/register/{residentId}")
-    public ResponseEntity<CarModel> registerCar(@PathVariable UUID residentId, @RequestBody CarModel carModel) {
+    public ResponseEntity<CarModel> registerCar(@PathVariable Long residentId, @RequestBody CarModel carModel) {
             CarModel savedCar = service.registerCarForResident(residentId, carModel);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCar.getId()).toUri();
             return ResponseEntity.created(uri).body(savedCar);
