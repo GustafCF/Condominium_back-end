@@ -63,8 +63,19 @@ public class TestConfig implements CommandLineRunner {
 
         ParkingModel pk1 = new ParkingModel(1, p1);
         ParkingModel pk2 = new ParkingModel(2, p2);
+        ParkingModel pk3 = new ParkingModel(3, p3);
+        ParkingModel pk4 = new ParkingModel(4, p4);
+        ParkingModel pk5 = new ParkingModel(5, p5);
+        ParkingModel pk6 = new ParkingModel(6, p6);
+        ParkingModel pk7 = new ParkingModel(7, p7);
+        ParkingModel pk8 = new ParkingModel(8, p8);
+        ParkingModel pk9 = new ParkingModel(9, p9);
+        ParkingModel pk10 = new ParkingModel(10, p10);
+        ParkingModel pk11 = new ParkingModel(11, p11);
+        ParkingModel pk12 = new ParkingModel(12, p12);
+        ParkingModel pk13 = new ParkingModel(13, p12);
 
-        parkingRepository.saveAll(Arrays.asList(pk1,pk2));
+        parkingRepository.saveAll(Arrays.asList(pk1, pk2, pk3, pk4, pk5, pk6, pk7, pk8, pk9, pk10, pk11, pk12, pk13));
 
         ResidentModel r1 = new ResidentModel(null, "Mariana", "Huyla Alves Miranda Ribeiro", LocalDate.of(2002, 8, 30), 22, true, "44453671172", "56048536151");
         ResidentModel r2 = new ResidentModel(null, "Gustavo", "Cesar Franco", LocalDate.of(2001, 2, 1), 23, true, "122560127", "50388175133");

@@ -2,6 +2,7 @@ package com.br.condominio.house.models;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -16,10 +17,11 @@ public class ParkingModel implements Serializable {
 
     @Id
     @Min(value = 0, message = "O número não pode ser negativo")
+    @Column(name = "vagancy_id")
     private int number;
 
     @ManyToOne
-    @JoinColumn(name = "vagancy_id")
+    @JoinColumn(name = "apartment")
     private ApartmentModel ap_pk;
 
     public ParkingModel(){

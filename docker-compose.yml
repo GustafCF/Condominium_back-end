@@ -1,6 +1,11 @@
 services:
   mysql:
     image: mysql
+    restart: unless-stopped
+    # env_file: ./.env
+    build:
+      context: "./"
+      dockerfile: Dockerfile
     ports:
       - "3306:3306"
     environment:
@@ -8,6 +13,8 @@ services:
       - MYSQL_PASSWORD=123
       - MYSQL_DATABASE=mydb
       - MYSQL_ROOT_PASSWORD=123
+    volumes:
+      - mysqlvloume:/var/lib/mysql  
 
   phpmyadmin:
     image: phpmyadmin
@@ -17,3 +24,36 @@ services:
       - PMA_HOST=mysql
     depends_on:
       - mysql
+  
+  app:
+    depends_on:
+      - mysql
+    image: springboot  
+    build: 
+      context: "./"
+      dockerfile: Dockerfile
+    working_dir: usr/src/house
+    container_name: condominium_backend
+    restart: on-failure
+    # env_file: ./.env
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/mydb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_PROFILE_ACTIVE=test
+      - SPRING_APPLICATION_ADMIN_ENABLED=false
+    volumes:
+      - ./src/:/opt/house
+  
+volumes:
+  mysqlvolume:
+
+    
+
+
+
+
+
