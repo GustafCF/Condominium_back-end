@@ -3,13 +3,11 @@ package com.br.condominio.house.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,12 +23,12 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
 @Entity
-@Table(name = "TB_DEPENDENTES")
+@Table(name = "TB_DEPENDENTS")
 public class DependentModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "Nome")
     private String name;
@@ -50,7 +48,7 @@ public class DependentModel implements Serializable {
     private List<ResidentModel> fathers = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "TB_AP_OCC_DEPENDENT", joinColumns = @JoinColumn(name = "dependent_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
+    @JoinTable(name = "TB_APARTMENT_OCC_DEPENDENT", joinColumns = @JoinColumn(name = "dependent_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
     private Set<ApartmentModel> ap_son =  new HashSet<>();
 
     public DependentModel() {

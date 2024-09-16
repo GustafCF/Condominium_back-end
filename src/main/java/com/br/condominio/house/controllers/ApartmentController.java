@@ -20,15 +20,15 @@ public class ApartmentController {
     private ApartmentService service;
 
     @GetMapping
-    public ResponseEntity<List<ApartmentModel>> findAll(){
+    public ResponseEntity<List<ApartmentModel>> findAll() {
         List<ApartmentModel> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping(value = "/number/{ap}")
-    public ResponseEntity<List<ApartmentModel>> findByAp(@PathVariable int ap){
-        List<ApartmentModel> obj = service.findByApartment(ap);
-        return ResponseEntity.ok().body(obj);
+    @GetMapping(value = "/find/{id}")
+    public ResponseEntity<ApartmentModel> finById(@PathVariable int id) {
+        ApartmentModel ap = service.finById(id);
+        return ResponseEntity.ok().body(ap);
     }
 
 }

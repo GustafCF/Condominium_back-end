@@ -2,7 +2,6 @@ package com.br.condominio.house.controllers;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.br.condominio.house.models.CarModel;
 import com.br.condominio.house.services.CarService;
-
 
 @RestController
 @RequestMapping(value = "/cars")
@@ -45,7 +43,7 @@ public class CarController {
             return ResponseEntity.created(uri).body(savedCar);
     }  
     
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.noContent().build();

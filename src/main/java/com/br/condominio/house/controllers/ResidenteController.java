@@ -2,7 +2,6 @@ package com.br.condominio.house.controllers;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +50,12 @@ public class ResidenteController {
         ResidentModel obj = service.insert(ap, entity);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
+    }
+
+    @PostMapping(value = "/at/{id}")
+    public ResponseEntity<ResidentModel> addAp(@PathVariable Long id, @RequestBody int ap){
+        ResidentModel obj = service.addAp(id, ap);
+        return ResponseEntity.ok().body(obj);
     }
 
     @DeleteMapping(value = "/{id}")

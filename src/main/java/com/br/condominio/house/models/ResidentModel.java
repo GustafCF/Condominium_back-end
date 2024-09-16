@@ -3,10 +3,10 @@ package com.br.condominio.house.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,12 +27,12 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
 @Entity
-@Table(name = "TB_RESIDENTES")
+@Table(name = "TB_RESIDENTS")
 public class ResidentModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "Nome")
     private String residentName;
@@ -61,7 +61,7 @@ public class ResidentModel implements Serializable {
     private List<DependentModel> dependent = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "TB_AP_RESIDENT", joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
+    @JoinTable(name = "TB_APARTMENT_RESIDENT", joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
     private Set<ApartmentModel> ap = new HashSet<>();
 
     public ResidentModel() {

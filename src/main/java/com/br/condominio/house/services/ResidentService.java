@@ -2,9 +2,7 @@ package com.br.condominio.house.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import com.br.condominio.house.models.ResidentModel;
 import com.br.condominio.house.repositories.ApartmentRepository;
 import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
-import com.br.condominio.house.services.exceptions.ResourceApException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -22,12 +19,14 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ResidentService {
 
-    @Autowired
     private ResidentRepository repository;
-    @Autowired
     private ApartmentRepository apartmentRepository;
-    
 
+    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository){
+        this.repository = repository;
+        this.apartmentRepository = apartmentRepository;
+    }
+    
     public List<ResidentModel> findAll(){
         return repository.findAll();
     }
@@ -41,14 +40,22 @@ public class ResidentService {
         return repository.findByResidentName(name);
     }
 
-    public ResidentModel insert (int ap, ResidentModel entity){
-        List<ApartmentModel> apart = apartmentRepository.findByApartment(ap);
-        if (apart.isEmpty()) {
-            throw new ResourceApException(ap);
-        } else{
-            entity.getAp().addAll(apart);
-            return repository.save(entity);
-        }
+    public ResidentModel insert(int ap, ResidentModel entity) {
+        ApartmentModel apart = apartmentRepository.findById(ap)
+            .orElseThrow(() -> new ResourceNotFoundException(ap));
+        entity.getAp().add(apart);
+        return repository.save(entity);
+    }
+
+    public ResidentModel addAp(Long residentId, int apartmentId) {
+        ResidentModel resident = repository.findById(residentId)
+            .orElseThrow(() -> new ResourceNotFoundException(residentId));
+    
+        ApartmentModel apartment = apartmentRepository.findById(apartmentId)
+            .orElseThrow(() -> new ResourceNotFoundException(apartmentId));
+    
+        resident.getAp().add(apartment);
+        return repository.save(resident);
     }
 
     public void delete(Long id){
