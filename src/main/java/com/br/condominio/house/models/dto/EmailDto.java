@@ -1,4 +1,4 @@
-package com.br.condominio.house.models;
+package com.br.condominio.house.models.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

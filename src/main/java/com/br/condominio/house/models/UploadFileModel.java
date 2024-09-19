@@ -3,13 +3,14 @@ package com.br.condominio.house.models;
 import java.io.Serializable;
 
 public class UploadFileModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String fileName;
     private String fileDownloadUri;
     private String fileType;
     private long size;
-    
+
     public UploadFileModel() {
     }
 
