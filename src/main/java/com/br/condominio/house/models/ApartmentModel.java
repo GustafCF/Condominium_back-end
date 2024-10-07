@@ -15,11 +15,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "TB_APARTAMENT")
 public class ApartmentModel implements Serializable {
-    private static final long serialVersionUID = 1L; 
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     private int apartment;
-    private String block; 
+    private String block;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "ap")
@@ -33,10 +34,10 @@ public class ApartmentModel implements Serializable {
     @OneToMany(mappedBy = "ap_pk")
     private Set<ParkingModel> vacancy = new HashSet<>();
 
-    public ApartmentModel(){
+    public ApartmentModel() {
     }
 
-    public ApartmentModel(int apartment, String block){
+    public ApartmentModel(int apartment, String block) {
         this.apartment = apartment;
         this.block = block;
     }
@@ -75,15 +76,19 @@ public class ApartmentModel implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ApartmentModel other = (ApartmentModel) obj;
-        if (apartment != other.apartment)
+        if (apartment != other.apartment) {
             return false;
+        }
         return true;
     }
 

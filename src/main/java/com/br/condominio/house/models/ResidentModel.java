@@ -29,6 +29,7 @@ import jakarta.validation.constraints.Min;
 @Entity
 @Table(name = "TB_RESIDENTS")
 public class ResidentModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -51,6 +52,8 @@ public class ResidentModel implements Serializable {
     @Column(name = "CPF")
     @CPF(message = "CPF inválido")
     private String cpf;
+    @Column(name = "email")
+    private String email;
 
     @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
@@ -68,8 +71,8 @@ public class ResidentModel implements Serializable {
     }
 
     public ResidentModel(Long id, String residentName, String lastName, LocalDate dataNascimento,
-        @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
-        @CPF(message = "CPF inválido") String cpf) {
+            @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
+            @CPF(message = "CPF inválido") String cpf, String email) {
         this.id = id;
         this.residentName = residentName;
         this.lastName = lastName;
@@ -78,9 +81,8 @@ public class ResidentModel implements Serializable {
         this.proprietario = proprietario;
         this.rg = rg;
         this.cpf = cpf;
-        
+        this.email = email;
     }
-
 
     public Long getId() {
         return id;
@@ -146,6 +148,17 @@ public class ResidentModel implements Serializable {
         this.cpf = cpf;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email){
+    
+         
+        this.email = email;
+        
+    }
+
     public List<CarModel> getCar() {
         return car;
     }
@@ -154,7 +167,7 @@ public class ResidentModel implements Serializable {
         return dependent;
     }
 
-    public Set<ApartmentModel> getAp(){
+    public Set<ApartmentModel> getAp() {
         return ap;
     }
 
@@ -168,18 +181,23 @@ public class ResidentModel implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ResidentModel other = (ResidentModel) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         return true;
     }
 

@@ -77,14 +77,18 @@ public class TestConfig implements CommandLineRunner {
 
         parkingRepository.saveAll(Arrays.asList(pk1, pk2, pk3, pk4, pk5, pk6, pk7, pk8, pk9, pk10, pk11, pk12, pk13));
 
-        ResidentModel r1 = new ResidentModel(null, "Mariana", "Huyla Alves Miranda Ribeiro", LocalDate.of(2002, 8, 30), 22, true, "44453671172", "56048536151");
-        ResidentModel r2 = new ResidentModel(null, "Gustavo", "Cesar Franco", LocalDate.of(2001, 2, 1), 23, true, "122560127", "50388175133");
-        ResidentModel r3 = new ResidentModel(null, "Vitória", "Higino", LocalDate.of(2002, 9, 11), 22, true, "171928192", "39699335106");
-        ResidentModel r4 = new ResidentModel(null, "Pedro", "Henrique Ramos Cardoso", LocalDate.of(2002, 1, 11), 22, true, "120850485", "44453671172");
+        ResidentModel r1 = new ResidentModel(null, "Mariana", "Huyla Alves Miranda Ribeiro", LocalDate.of(2002, 8, 30), 22, true, "44453671172", "56048536151", "HuylaMary@gmail.com");
+        ResidentModel r2 = new ResidentModel(null, "Gustavo", "Cesar Franco", LocalDate.of(2001, 2, 1), 23, true, "122560127", "50388175133", "gustavocerro3@gmail.com");
+        ResidentModel r3 = new ResidentModel(null, "Vitória", "Higino", LocalDate.of(2002, 9, 11), 22, true, "171928192", "39699335106", "vitória@gmail.com");
+        ResidentModel r4 = new ResidentModel(null, "Pedro", "Henrique Ramos Cardoso", LocalDate.of(2002, 1, 11), 22, true, "120850485", "44453671172", "pedro@gmail.com");
 
         residentRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
 
-        DependentModel m1 = new DependentModel(null, "Verônica", "Alves Franco", LocalDate.of(2024, 12, 25), 0, Arrays.asList(r1, r2));
+        DependentModel m1 = new DependentModel(null, "Verônica", "Alves Franco", LocalDate.of(2024, 12, 25), 0);
+
+        dependentRepository.save(m1);
+
+        m1.getFathers().addAll(Arrays.asList(r1, r2));
 
         dependentRepository.save(m1);
 

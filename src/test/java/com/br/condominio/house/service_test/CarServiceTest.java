@@ -1,4 +1,4 @@
-package com.br.condominio.house;
+package com.br.condominio.house.service_test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
