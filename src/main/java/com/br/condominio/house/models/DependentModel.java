@@ -25,6 +25,7 @@ import jakarta.validation.constraints.Min;
 @Entity
 @Table(name = "TB_DEPENDENTS")
 public class DependentModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -49,19 +50,18 @@ public class DependentModel implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "TB_APARTMENT_OCC_DEPENDENT", joinColumns = @JoinColumn(name = "dependent_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
-    private Set<ApartmentModel> ap_son =  new HashSet<>();
+    private Set<ApartmentModel> ap_son = new HashSet<>();
 
     public DependentModel() {
     }
 
     public DependentModel(Long id, String name, String lastName, LocalDate dateBirth,
-        @Min(value = 0, message = "A idade não pode ser negativa") int age, List<ResidentModel> fathers) {
+            @Min(value = 0, message = "A idade não pode ser negativa") int age) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.dateBirth = dateBirth;
         this.age = age;
-        this.fathers = fathers;
     }
 
     public Long getId() {
@@ -107,7 +107,7 @@ public class DependentModel implements Serializable {
     public Set<ApartmentModel> getAp_son() {
         return ap_son;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -118,19 +118,24 @@ public class DependentModel implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         DependentModel other = (DependentModel) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         return true;
     }
-    
+
 }

@@ -10,8 +10,8 @@ import com.br.condominio.house.config.FileStorageConfig;
 @SpringBootApplication
 public class HouseApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HouseApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HouseApplication.class, args);
+    }
 
 }
