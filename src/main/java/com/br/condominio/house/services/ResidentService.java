@@ -22,63 +22,63 @@ public class ResidentService {
     private ResidentRepository repository;
     private ApartmentRepository apartmentRepository;
 
-    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository){
+    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository) {
         this.repository = repository;
         this.apartmentRepository = apartmentRepository;
     }
-    
-    public List<ResidentModel> findAll(){
+
+    public List<ResidentModel> findAll() {
         return repository.findAll();
     }
 
-    public ResidentModel findById(Long id){
+    public ResidentModel findById(Long id) {
         Optional<ResidentModel> obj = repository.findById(id);
-        return obj.orElseThrow(()-> new ResourceNotFoundException(id));
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public List<ResidentModel> findByName(String name) {
+    public Optional<ResidentModel> findByName(String name) {
         return repository.findByResidentName(name);
     }
 
     public ResidentModel insert(int ap, ResidentModel entity) {
         ApartmentModel apart = apartmentRepository.findById(ap)
-            .orElseThrow(() -> new ResourceNotFoundException(ap));
+                .orElseThrow(() -> new ResourceNotFoundException(ap));
         entity.getAp().add(apart);
         return repository.save(entity);
     }
 
     public ResidentModel addAp(Long residentId, int apartmentId) {
         ResidentModel resident = repository.findById(residentId)
-            .orElseThrow(() -> new ResourceNotFoundException(residentId));
-    
+                .orElseThrow(() -> new ResourceNotFoundException(residentId));
+
         ApartmentModel apartment = apartmentRepository.findById(apartmentId)
-            .orElseThrow(() -> new ResourceNotFoundException(apartmentId));
-    
+                .orElseThrow(() -> new ResourceNotFoundException(apartmentId));
+
         resident.getAp().add(apartment);
         return repository.save(resident);
     }
 
-    public void delete(Long id){
-        try{
+    public void delete(Long id) {
+        try {
             repository.deleteById(id);
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
-        }catch(DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
-        }    
+        }
     }
 
-    public ResidentModel update(Long id, ResidentModel entity){
-        try{
+    public ResidentModel update(Long id, ResidentModel entity) {
+        try {
             ResidentModel obj = repository.getReferenceById(id);
             updateData(obj, entity);
             return repository.save(obj);
-        }catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
 
-    private void updateData(ResidentModel entity, ResidentModel obj){
+    private void updateData(ResidentModel entity, ResidentModel obj) {
         entity.setResidentName(obj.getResidentName());
         entity.setLastName(obj.getLastName());
         entity.setDataNascimento(obj.getDataNascimento());
@@ -87,7 +87,5 @@ public class ResidentService {
         entity.setRg(obj.getRg());
         entity.setCpf(obj.getCpf());
     }
-
-    
 
 }
