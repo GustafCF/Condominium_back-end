@@ -1,4 +1,4 @@
-# Back-end de um Site de gerenciamento de um condomínio fechado
+# Back-end de um Site de gerenciamento de um condomínio
     Este projeto foi desenvolvido para gerir de forma prática e útil um condóminio, oferecendo controle de entrada e saída, registro de condóminos e seus dependentes, controle de visitantes e de aluguei de apartamentos por parte de seu proprietário. 
 
 # Tecnologias     
