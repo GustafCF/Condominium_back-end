@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,7 @@ public class ResidenteController {
     }
 
     @PostMapping(value = "/insert/{ap}")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<ResidentModel> insert(@PathVariable int ap, @RequestBody ResidentModel entity) {
         ResidentModel obj = service.insert(ap, entity);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -31,7 +32,7 @@ public class ApartmentModel implements Serializable {
     private Set<DependentModel> occ_son = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "ap_pk")
+    @OneToMany(mappedBy = "ap_pk", cascade = CascadeType.ALL)
     private Set<ParkingModel> vacancy = new HashSet<>();
 
     public ApartmentModel() {
