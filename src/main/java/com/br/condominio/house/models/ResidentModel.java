@@ -73,12 +73,12 @@ public class ResidentModel implements Serializable {
     @JoinTable(name = "TB_APARTMENT_RESIDENT", joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
     private Set<ApartmentModel> ap = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(
             name = "TB_USER_ROLE",
             joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleModel> roles = new HashSet<>();
+    private List<RoleModel> roles = new ArrayList<>();
 
     public ResidentModel() {
     }
@@ -199,7 +199,7 @@ public class ResidentModel implements Serializable {
         return ap;
     }
 
-    public Set<RoleModel> getRoles() {
+    public List<RoleModel> getRoles() {
         return roles;
     }
 

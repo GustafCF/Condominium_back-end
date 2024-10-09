@@ -5,12 +5,15 @@ import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.br.condominio.house.models.ApartmentModel;
 import com.br.condominio.house.models.ResidentModel;
+import com.br.condominio.house.models.RoleModel;
 import com.br.condominio.house.repositories.ApartmentRepository;
 import com.br.condominio.house.repositories.ResidentRepository;
+import com.br.condominio.house.repositories.RoleRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
@@ -19,12 +22,16 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ResidentService {
 
-    private ResidentRepository repository;
-    private ApartmentRepository apartmentRepository;
+    private final ResidentRepository repository;
+    private final ApartmentRepository apartmentRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository) {
+    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.repository = repository;
         this.apartmentRepository = apartmentRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     public List<ResidentModel> findAll() {
@@ -43,8 +50,24 @@ public class ResidentService {
     public ResidentModel insert(int ap, ResidentModel entity) {
         ApartmentModel apart = apartmentRepository.findById(ap)
                 .orElseThrow(() -> new ResourceNotFoundException(ap));
-        entity.getAp().add(apart);
-        return repository.save(entity);
+
+        var basicRole = roleRepository.findByName(RoleModel.Values.BASIC.name());
+
+        ResidentModel resident = new ResidentModel();
+        resident.getAp().add(apart);
+        resident.setResidentName(entity.getResidentName());
+        resident.setLastName(entity.getLastName());
+        resident.setDataNascimento(entity.getDataNascimento());
+        resident.setAge(entity.getAge());
+        resident.setProprietario(entity.getProprietario());
+        resident.setRg(entity.getRg());
+        resident.setCpf(entity.getCpf());
+        resident.setEmail(entity.getEmail());
+        resident.setUsername(entity.getUsername());
+        resident.setPassword(passwordEncoder.encode(entity.getPassword()));
+        resident.getRoles().add(basicRole);
+
+        return repository.save(resident);
     }
 
     public ResidentModel addAp(Long residentId, int apartmentId) {

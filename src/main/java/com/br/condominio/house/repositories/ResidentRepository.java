@@ -10,5 +10,7 @@ import com.br.condominio.house.models.ResidentModel;
 @Repository
 public interface ResidentRepository extends JpaRepository<ResidentModel, Long> {
 
+    Optional<ResidentModel> findByUsername(String username);
+
     Optional<ResidentModel> findByResidentName(String residentName);
 }

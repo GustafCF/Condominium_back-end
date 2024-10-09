@@ -32,7 +32,7 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        var user = residentRepository.findByResidentName(loginRequest.name());
+        var user = residentRepository.findByUsername(loginRequest.name());
 
         if (user.isEmpty() || !user.get().LoginValidation(loginRequest, passwordEncoder)) {
             throw new BadCredentialsException("Usuário ou senha inválida");
@@ -44,7 +44,7 @@ public class AuthService {
         var scopes = user.get().getRoles()
                 .stream()
                 .map(RoleModel::getName)
-                .collect(Collectors.joining(""));
+                .collect(Collectors.joining(" "));
 
         var claims = JwtClaimsSet.builder()
                 .issuer("back-end")
