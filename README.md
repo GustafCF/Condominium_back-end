@@ -4,7 +4,7 @@
 # Tecnologias     
  - **Linguagem:** Java
  - **Frameworks:** Spring Boot
- - **Ferramentas:** Git (Para versionamento do código), Postman(Para testes de requisições), Docker(Para deploy da aplicação)
+ - **Ferramentas:** Git (Para versionamento do código), Postman(Para testes de requisições), Docker(Para deploy da aplicação),MySQL (Banco de dados)
 
    **Aprofundamento**
      - O programa utiliza de Jwt(JSON Web Token), que é uma forma de autenticação que permite um servidor verifique a identidade de um usuário sem precisar armazenar informações sobre ele.
