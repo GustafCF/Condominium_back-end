@@ -2,7 +2,6 @@ package com.br.condominio.house.models;
 
 import java.io.Serializable;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,7 +21,7 @@ public class ParkingModel implements Serializable {
     @Column(name = "vagancy_id")
     private int number;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "apartment")
     private ApartmentModel ap_pk;
 

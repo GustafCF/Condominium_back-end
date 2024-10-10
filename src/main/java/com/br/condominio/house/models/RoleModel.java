@@ -30,6 +30,10 @@ public class RoleModel implements Serializable {
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     private List<ResidentModel> user = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "ls_roles", cascade = CascadeType.ALL)
+    private List<FunctionaryModel> functionary = new ArrayList<>();
+
     public RoleModel() {
     }
 
@@ -56,6 +60,10 @@ public class RoleModel implements Serializable {
 
     public List<ResidentModel> getUser() {
         return user;
+    }
+
+    public List<FunctionaryModel> getFunctionary() {
+        return functionary;
     }
 
     public enum Values {

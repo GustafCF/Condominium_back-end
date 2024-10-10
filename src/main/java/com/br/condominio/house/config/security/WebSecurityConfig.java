@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions().disable())
