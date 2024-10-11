@@ -6,7 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +25,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/fun")
 public class FunctionaryController {
 
-    private FunctionaryService service;
+    private final FunctionaryService service;
 
     public FunctionaryController(FunctionaryService service) {
         this.service = service;
@@ -34,6 +37,18 @@ public class FunctionaryController {
         var functionary = service.registrar(entity);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(functionary.getId()).toUri();
         return ResponseEntity.created(uri).body(functionary);
+    }
+
+    @PutMapping(value = "/atl")
+    public ResponseEntity<FunctionaryModel> update(@RequestBody @Valid FunctionaryModel entity, @PathVariable Long id, JwtAuthenticationToken token) {
+        service.update(id, entity);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<FunctionaryModel> delete(@PathVariable Long id, JwtAuthenticationToken token) {
+        service.delete(id, token);
+        return ResponseEntity.noContent().build();
     }
 
 }

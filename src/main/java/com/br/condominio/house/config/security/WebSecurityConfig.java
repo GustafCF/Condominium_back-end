@@ -37,18 +37,17 @@ public class WebSecurityConfig {
     @Value("${jwt.private.key}")
     private RSAPrivateKey privateKey;
 
-    @SuppressWarnings("removal")
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(authorize -> authorize
+                .csrf(csrf -> csrf.disable())
+                    .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
                     .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
                 .anyRequest().authenticated())
-                .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions().disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

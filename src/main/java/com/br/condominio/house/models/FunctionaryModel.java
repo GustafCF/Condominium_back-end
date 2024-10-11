@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.br.condominio.house.models.dto.LoginRequest;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -156,6 +159,10 @@ public class FunctionaryModel implements Serializable {
 
     public List<RoleModel> getLs_roles() {
         return ls_roles;
+    }
+
+    public boolean LoginValidationFunc(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
     }
 
     @Override

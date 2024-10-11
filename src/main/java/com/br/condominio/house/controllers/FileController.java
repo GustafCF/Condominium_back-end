@@ -36,8 +36,8 @@ public class FileController {
     @Autowired
     private FileStorageService service;
 
-    @PostMapping(value ="/v1")
-    public UploadFileModel uploadFile(@RequestParam("file") MultipartFile file){
+    @PostMapping(value = "/v1")
+    public UploadFileModel uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = service.storeFile(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/downloadFile/").path(fileName).toUriString();
         return new UploadFileModel(fileName, fileDownloadUri, file.getContentType(), file.getSize());
@@ -45,33 +45,33 @@ public class FileController {
 
     //upload de vários arquivos
     @PostMapping(value = "/vs1")
-    public List<UploadFileModel> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files){
+    public List<UploadFileModel> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.asList(files)
-        .stream()
-        .map(file -> uploadFile(file))
-        .collect(Collectors.toList());
+                .stream()
+                .map(file -> uploadFile(file))
+                .collect(Collectors.toList());
     }
 
     //download de arquivos
     @GetMapping(value = "vs1/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request){
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
 
         Resource resource = service.loadFileAsResource(fileName);
 
         String contentType = null;
 
-        try{
+        try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.info("Could not determine file type");
         }
-        if(contentType == null){
+        if (contentType == null) {
             contentType = "application/octet-stream";
         }
         return ResponseEntity.ok()
-        .contentType(MediaType.parseMediaType(contentType))
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"" )
-        .body(resource);
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     // Requisição com ResponseEntity
@@ -84,6 +84,4 @@ public class FileController {
     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao armazenar o arquivo: " + e.getMessage());
     //     }
     // }
-
-
 }

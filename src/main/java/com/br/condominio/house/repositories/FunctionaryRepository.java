@@ -12,4 +12,6 @@ public interface FunctionaryRepository extends JpaRepository<FunctionaryModel, L
 
     Optional<FunctionaryModel> findByName(String name);
 
+    Optional<FunctionaryModel> findByUsername(String username);
+
 }
