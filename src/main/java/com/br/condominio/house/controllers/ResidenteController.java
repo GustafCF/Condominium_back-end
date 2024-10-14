@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.br.condominio.house.models.ResidentModel;
 import com.br.condominio.house.services.ResidentService;
+import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
 @CrossOrigin("*")
 @RestController
@@ -56,6 +57,7 @@ public class ResidenteController {
     }
 
     @PostMapping(value = "/at/{id}")
+    @PreAuthorize("hasAutority('Scope_admin')")
     public ResponseEntity<ResidentModel> addAp(@PathVariable Long id, @RequestBody int ap) {
         ResidentModel obj = service.addAp(id, ap);
         return ResponseEntity.ok().body(obj);
@@ -67,7 +69,7 @@ public class ResidenteController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping(value = "update/{id}")
     public ResponseEntity<ResidentModel> update(@PathVariable Long id, @RequestBody ResidentModel entity) {
         var obj = service.update(id, entity);
         return ResponseEntity.ok().body(obj);

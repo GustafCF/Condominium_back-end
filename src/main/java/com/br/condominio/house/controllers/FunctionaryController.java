@@ -40,13 +40,15 @@ public class FunctionaryController {
     }
 
     @PutMapping(value = "/atl")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<FunctionaryModel> update(@RequestBody @Valid FunctionaryModel entity, @PathVariable Long id, JwtAuthenticationToken token) {
         service.update(id, entity);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<FunctionaryModel> delete(@PathVariable Long id, JwtAuthenticationToken token) {
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity<Void> delete(@PathVariable Long id, JwtAuthenticationToken token) {
         service.delete(id, token);
         return ResponseEntity.noContent().build();
     }

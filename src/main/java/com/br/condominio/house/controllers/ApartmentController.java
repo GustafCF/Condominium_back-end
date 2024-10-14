@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +20,15 @@ public class ApartmentController {
     @Autowired
     private ApartmentService service;
 
-    @GetMapping
+    @GetMapping(value = "/ls")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<List<ApartmentModel>> findAll() {
         List<ApartmentModel> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/find/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<ApartmentModel> finById(@PathVariable int id) {
         ApartmentModel ap = service.finById(id);
         return ResponseEntity.ok().body(ap);

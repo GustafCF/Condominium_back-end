@@ -1,7 +1,5 @@
 package com.br.condominio.house.services;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -9,8 +7,8 @@ import org.springframework.stereotype.Service;
 import com.br.condominio.house.models.FunctionaryModel;
 import com.br.condominio.house.models.RoleModel;
 import com.br.condominio.house.repositories.FunctionaryRepository;
+import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.repositories.RoleRepository;
-import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
@@ -21,13 +19,15 @@ import jakarta.transaction.Transactional;
 public class FunctionaryService {
 
     private final FunctionaryRepository repository;
+    private final ResidentRepository residentRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public FunctionaryService(FunctionaryRepository repository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public FunctionaryService(FunctionaryRepository repository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository, ResidentRepository residentRepository) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.residentRepository = residentRepository;
     }
 
     @Transactional
@@ -50,35 +50,25 @@ public class FunctionaryService {
     }
 
     public void delete(Long id, JwtAuthenticationToken token) {
-        try {
-            // Obtém o funcionário pelo ID recuperado do token
-            var funcOptional = repository.findById(Long.valueOf(token.getName()));
-            
-            // Verifica se o funcionário foi encontrado
-            if (!funcOptional.isPresent()) {
-                throw new UnauthorizedException("Usuário não tem permissão para deletar este registro.");
-            }
-    
-            var func = funcOptional.get();
-    
-            // Verifica se o funcionário possui o papel de ADMIN
-            var isAdmin = func.getLs_roles()
-                    .stream()
-                    .anyMatch(role -> role.getName().equalsIgnoreCase(RoleModel.Values.ADMIN.name()));
-    
-            if (isAdmin) {
-                // Deleta o funcionário pelo ID
+        var func = repository.findById(Long.valueOf(token.getName()));
+
+        var isAdmin = func.get().getLs_roles()
+                .stream()
+                .anyMatch(role -> role.getName().equalsIgnoreCase(RoleModel.Values.ADMIN.name()));
+
+        if (isAdmin) {
+            if (repository.existsById(id)) {
                 repository.deleteById(id);
+            } else if (residentRepository.existsById(id)) {
+                residentRepository.deleteById(id);
             } else {
-                throw new UnauthorizedException("Usuário não tem permissão para deletar este registro.");
+                throw new ResourceNotFoundException(id);
             }
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException(e.getMessage());
+
+        } else {
+            throw new UnauthorizedException("Usuário não tem permissão para deletar este registro.");
         }
     }
-    
 
     public FunctionaryModel update(Long id, FunctionaryModel obj) {
         try {
