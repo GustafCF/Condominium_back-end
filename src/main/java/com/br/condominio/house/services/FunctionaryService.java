@@ -12,7 +12,6 @@ import com.br.condominio.house.repositories.RoleRepository;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -70,24 +69,37 @@ public class FunctionaryService {
         }
     }
 
-    public FunctionaryModel update(Long id, FunctionaryModel obj) {
-        try {
-            var entity = repository.getReferenceById(id);
+    @Transactional
+    public FunctionaryModel update(Long id, FunctionaryModel obj, JwtAuthenticationToken token) {
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        var entity = repository.getReferenceById(id);
+        if (entity.getId().equals(Long.valueOf(token.getName()))) {
             updateData(entity, obj);
             return repository.save(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+        } else {
+            throw new UnauthorizedException("Você não está authorizado");
         }
     }
 
     private void updateData(FunctionaryModel entity, FunctionaryModel obj) {
-        entity.setName(obj.getName());
-        entity.setLastName(obj.getLastName());
-        entity.setEmail(obj.getEmail());
-        entity.setRg(obj.getRg());
-        entity.setCpf(obj.getCpf());
-        entity.setCep(obj.getCep());
-        entity.setAddress(obj.getAddress());
-        entity.setUsername(obj.getUsername());
+        if (obj.getName() != null && !obj.getName().isEmpty()) {
+            entity.setName(obj.getName());
+        }
+        if (obj.getLastName() != null && !obj.getLastName().isEmpty()) {
+            entity.setLastName(obj.getLastName());
+        }
+        if (obj.getEmail() != null && !obj.getEmail().isEmpty()) {
+            entity.setEmail(obj.getEmail());
+        }
+        if (obj.getCep() != null && !obj.getCep().isEmpty()) {
+            entity.setCep(obj.getCep());
+        }
+        if (obj.getAddress() != null && !obj.getAddress().isEmpty()) {
+            entity.setAddress(obj.getAddress());
+        }
+        if (obj.getUsername() != null && !obj.getUsername().isEmpty()) {
+            entity.setUsername(obj.getUsername());
+        }
     }
+
 }

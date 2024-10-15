@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import com.br.condominio.house.models.ApartmentModel;
@@ -16,8 +17,10 @@ import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.repositories.RoleRepository;
 import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
+import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ResidentService {
@@ -91,13 +94,16 @@ public class ResidentService {
         }
     }
 
-    public ResidentModel update(Long id, ResidentModel entity) {
-        try {
+    @Transactional
+    public ResidentModel update(Long id, ResidentModel entity, JwtAuthenticationToken token) {
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        
+        if (entity.getUsername().equalsIgnoreCase(token.getName())) {
             ResidentModel obj = repository.getReferenceById(id);
             updateData(obj, entity);
             return repository.save(obj);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+        } else {
+            throw new UnauthorizedException("Não autorizado!");
         }
     }
 

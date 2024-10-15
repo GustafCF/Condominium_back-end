@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.br.condominio.house.models.ResidentModel;
 import com.br.condominio.house.services.ResidentService;
-import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
 @CrossOrigin("*")
 @RestController
@@ -57,21 +57,22 @@ public class ResidenteController {
     }
 
     @PostMapping(value = "/at/{id}")
-    @PreAuthorize("hasAutority('Scope_admin')")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<ResidentModel> addAp(@PathVariable Long id, @RequestBody int ap) {
         ResidentModel obj = service.addAp(id, ap);
         return ResponseEntity.ok().body(obj);
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "update/{id}")
-    public ResponseEntity<ResidentModel> update(@PathVariable Long id, @RequestBody ResidentModel entity) {
-        var obj = service.update(id, entity);
+    @PutMapping(value = "/update/{id}")
+    public ResponseEntity<ResidentModel> update(@PathVariable Long id, @RequestBody ResidentModel entity, JwtAuthenticationToken token) {
+        var obj = service.update(id, entity, token);
         return ResponseEntity.ok().body(obj);
     }
 

@@ -41,10 +41,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
-                    .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/res/update/{id}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/fun/atl/{id}").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

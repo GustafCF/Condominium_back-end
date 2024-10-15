@@ -31,7 +31,7 @@ public class TestConfig implements CommandLineRunner {
     private final ApartmentRepository apartmentRepository;
     private final ParkingRepository parkingRepository;
     private final RoleRepository roleRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder; 
 
     public TestConfig(ResidentRepository residentRepository, CarRepository carRepository, DependentRepository dependentRepository,
             ApartmentRepository apartmentRepository, ParkingRepository parkingRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
