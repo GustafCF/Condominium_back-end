@@ -39,9 +39,10 @@ public class FunctionaryController {
     }
 
     @Operation(summary = "Cadastro de novo usuário",
-            description = "Verifica as credenciais de um usuário para checar se ele tem autorização para cadastrar usuários, com base no seu papel pré-definido e o registra no banco de dados")
+            description = "Verifica as credenciais de um usuário para checar se ele tem autorização para cadastrar usuários, com base no seu papel pré-definido e o registra no banco de dados",
+            tags = {"Funcionários"})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso",
+        @ApiResponse(responseCode = "201", description = "Funcionário registrado com sucesso",
                 content = @Content(schema = @Schema(implementation = FunctionaryModel.class))),
         @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos",
                 content = @Content(mediaType = "application/json")),
@@ -56,7 +57,9 @@ public class FunctionaryController {
         return ResponseEntity.created(uri).body(functionary);
     }
 
-    @Operation(summary = "Atualizar um funcionário", description = "Atualiza os dados de um funcionário existente. Requer autorização do funcionário correspondente.")
+    @Operation(summary = "Atualizar um funcionário",
+            description = "Atualiza os dados de um funcionário existente. Requer autorização do funcionário correspondente.",
+            tags = {"Funcionários"})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Funcionário atualizado com sucesso",
                 content = @Content(schema = @Schema(implementation = FunctionaryModel.class))),
@@ -71,7 +74,9 @@ public class FunctionaryController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Exlcuir funcionário da base de dados", description = "Remove um funcionário do sistema. Requer autorização de adminitrador")
+    @Operation(summary = "Exlcuir funcionário da base de dados",
+            description = "Remove um funcionário do sistema. Requer autorização de adminitrador",
+            tags = {"Funcionários"})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Funcionário excluído com sucesso",
                 content = @Content()),

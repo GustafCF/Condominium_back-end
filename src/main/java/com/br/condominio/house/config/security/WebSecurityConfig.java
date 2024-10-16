@@ -39,7 +39,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http    
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
@@ -55,23 +56,23 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    // .cors(Customizer.withDefaults())
-    // @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-        //Permite que credenciais (como cookies, cabeçalhos de autenticação ou certificados de cliente) sejam incluídas nas solicitações CORS. Isso é importante se você estiver fazendo requisições autenticadas entre diferentes origens.
-        // configuration.setAllowCredentials(true);
-        //Permite que qualquer origem (domínio) faça solicitações para a sua API. O uso do caractere curinga * permite que todas as origens sejam aceitas
-        // configuration.addAllowedOriginPattern("*");
-        //Permite que qualquer cabeçalho seja enviado nas solicitações. Isso é útil para permitir que cabeçalhos personalizados sejam incluídos nas requisições.
-        // configuration.addAllowedHeader("*");
-        //Permite que qualquer método HTTP (GET, POST, PUT, DELETE, etc.) seja usado nas solicitações. Isso é útil para permitir flexibilidade em suas APIs.
-    //     configuration.addAllowedMethod("*");
+    
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Permite que credenciais (como cookies, cabeçalhos de autenticação ou certificados de cliente) sejam incluídas nas solicitações CORS. Isso é importante se você estiver fazendo requisições autenticadas entre diferentes origens.
+        configuration.setAllowCredentials(true);
+        // Permite que qualquer origem (domínio) faça solicitações para a sua API. O uso do caractere curinga * permite que todas as origens sejam aceitas
+        configuration.addAllowedOriginPattern("*");
+        // Permite que qualquer cabeçalho seja enviado nas solicitações. Isso é útil para permitir que cabeçalhos personalizados sejam incluídos nas requisições.
+        configuration.addAllowedHeader("*");
+        // Permite que qualquer método HTTP (GET, POST, PUT, DELETE, etc.) seja usado nas solicitações. Isso é útil para permitir flexibilidade em suas APIs.
+        configuration.addAllowedMethod("*");
 
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration);
-    //     return source;
-    // }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public JwtDecoder jwtDecoder() {
