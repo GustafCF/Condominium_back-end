@@ -39,16 +39,19 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http    
+        http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/res/update/{id}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/fun/atl/{id}").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated())
+                    .requestMatchers(HttpMethod.GET, "/park/list").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/findBy/{id}").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/auth/login/func").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/res/insert/{id}").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/fun/regis").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/res/update/{id}").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/fun/atl/{id}").permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -56,7 +59,6 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

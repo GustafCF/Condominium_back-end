@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
@@ -41,6 +43,10 @@ public class DependentModel implements Serializable {
     @Column(name = "Idade")
     @Min(value = 0, message = "A idade não pode ser negativa")
     private int age;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dependent", cascade = CascadeType.ALL)
+    private List<TimestampModel> ticket = new ArrayList<>();
 
     //A anotação cascade define como as operações de persistência devem ser propagadas de uma entidade para suas entidades relacionadas.
     //A anotação fetch define como as entidades relacionadas devem ser carregadas do banco de dados.
@@ -106,6 +112,10 @@ public class DependentModel implements Serializable {
 
     public Set<ApartmentModel> getAp_son() {
         return ap_son;
+    }
+
+    public List<TimestampModel> getTicket() {
+        return ticket;
     }
 
     @Override

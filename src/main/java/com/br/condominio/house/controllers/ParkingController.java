@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/park")
 public class ParkingController {
@@ -27,8 +29,8 @@ public class ParkingController {
     private ParkingService service;
 
     @Operation(
-            summary = "Listar Carros",
-            description = "Endpoint para listagem de todas as vagas registrados no banco de dados"
+            summary = "Listar vagas",
+            description = "Endpoint para listagem de todas as vagas de estacionamento registrados no banco de dados"
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Success!",
@@ -36,7 +38,7 @@ public class ParkingController {
         @ApiResponse(responseCode = "403", description = "Unathorized!",
                 content = @Content(mediaType = "application/json"))
     })
-    @GetMapping
+    @GetMapping(value = "/list")
     @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<List<ParkingModel>> findAll() {
         List<ParkingModel> entity = service.findAll();
@@ -51,6 +53,8 @@ public class ParkingController {
         @ApiResponse(responseCode = "200", description = "Success",
                 content = @Content(schema = @Schema(implementation = ParkingModel.class))),
         @ApiResponse(responseCode = "404", description = "Resource not found",
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "403", description = "Unauthorized",
                 content = @Content(mediaType = "application/json"))
     })
     @GetMapping(value = "/findBy/{id}")

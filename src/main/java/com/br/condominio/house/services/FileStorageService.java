@@ -33,6 +33,7 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file) {
+        @SuppressWarnings("null")
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {

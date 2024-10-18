@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 
 import com.br.condominio.house.models.ApartmentModel;
+import com.br.condominio.house.models.EmailModel;
 import com.br.condominio.house.models.ResidentModel;
 import com.br.condominio.house.models.RoleModel;
 import com.br.condominio.house.repositories.ApartmentRepository;
@@ -19,7 +20,6 @@ import com.br.condominio.house.services.exceptions.DatabaseException;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 import com.br.condominio.house.services.exceptions.UnauthorizedException;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -29,12 +29,14 @@ public class ResidentService {
     private final ApartmentRepository apartmentRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final EmailService emailService;
 
-    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public ResidentService(ResidentRepository repository, ApartmentRepository apartmentRepository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository, EmailService emailService) {
         this.repository = repository;
         this.apartmentRepository = apartmentRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.emailService = emailService;
     }
 
     public List<ResidentModel> findAll() {
@@ -70,6 +72,16 @@ public class ResidentService {
         resident.setPassword(passwordEncoder.encode(entity.getPassword()));
         resident.getRoles().add(basicRole);
 
+        if (!entity.getEmail().isEmpty()) {
+            EmailModel email = new EmailModel();
+            email.setEmailFrom("cond_back@email.com");
+            email.setEmailTo(entity.getEmail());
+            email.setSubject("Bem-vindo ao condomínio!");
+            email.setText("Olá " + entity.getResidentName() + ",\n\nBEm-vindo ao nosso Condomínio. É um prazer tê-lo conosco." + "\n\nAqui está seu nome de usuário: " + entity.getUsername() + ", e sua senha: " + entity.getPassword()
+                    + "\n\nRecomendamos que os troque assim que possível! Por motivos de segurança");
+            emailService.sendEmail(email);
+        }
+
         return repository.save(resident);
     }
 
@@ -97,7 +109,7 @@ public class ResidentService {
     @Transactional
     public ResidentModel update(Long id, ResidentModel entity, JwtAuthenticationToken token) {
         repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        
+
         if (entity.getUsername().equalsIgnoreCase(token.getName())) {
             ResidentModel obj = repository.getReferenceById(id);
             updateData(obj, entity);

@@ -69,16 +69,20 @@ public class ResidentModel implements Serializable {
     @ManyToMany(mappedBy = "fathers", cascade = CascadeType.ALL)
     private List<DependentModel> dependent = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "TB_APARTMENT_RESIDENT", joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "apartment_id"))
     private Set<ApartmentModel> ap = new HashSet<>();
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "TB_USER_ROLE",
             joinColumns = @JoinColumn(name = "resident_id"), inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<RoleModel> roles = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy="res", cascade = CascadeType.ALL)
+    private List<TimestampModel> ticket = new ArrayList<>();
 
     public ResidentModel() {
     }
@@ -201,6 +205,10 @@ public class ResidentModel implements Serializable {
 
     public List<RoleModel> getRoles() {
         return roles;
+    }
+
+    public List<TimestampModel> getTicket() {
+        return ticket;
     }
 
     public boolean LoginValidation(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {

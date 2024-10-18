@@ -34,28 +34,12 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        // Tente encontrar o usuário como residente
-        var user = residentRepository.findByUsername(loginRequest.name());
-        // Tente encontrar o funcionário
-        var func = functionaryRepository.findByUsername(loginRequest.name());
+        var user = residentRepository.findByUsername(loginRequest.name()).orElseThrow(() -> new BadCredentialsException("Usuário invalido"));
 
-        // Validação do residente
-        if (user.isPresent() && user.get().LoginValidation(loginRequest, passwordEncoder)) {
-            // Se o usuário for encontrado e a validação for bem-sucedida
-            return createJwtForUser(user.get());
+        if (!user.LoginValidation(loginRequest, passwordEncoder)) {
+            throw new BadCredentialsException("Senha inválida!");
         }
 
-        // Validação do funcionário
-        if (func.isPresent() && func.get().LoginValidationFunc(loginRequest, passwordEncoder)) {
-            // Se o funcionário for encontrado e a validação for bem-sucedida
-            return createJwtForFunc(func.get());
-        }
-
-        // Se nenhum usuário ou funcionário for encontrado ou a validação falhar
-        throw new BadCredentialsException("Usuário ou senha inválida");
-    }
-
-    private LoginResponse createJwtForUser(ResidentModel user) {
         var now = Instant.now();
         var expiresIn = 300L;
 
@@ -71,23 +55,28 @@ public class AuthService {
                 .expiresAt(now.plusSeconds(expiresIn))
                 .claim("scope", scopes)
                 .build();
-
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         return new LoginResponse(jwtValue, expiresIn);
     }
 
-    private LoginResponse createJwtForFunc(FunctionaryModel func) {
+    public LoginResponse loginFunc(LoginRequest loginRequest) {
+        var fun = functionaryRepository.findByUsername(loginRequest.name()).orElseThrow(() -> new BadCredentialsException("Usuário invalido"));
+
+        if (!fun.LoginValidationFunc(loginRequest, passwordEncoder)) {
+            throw new BadCredentialsException("Senha inválida!");
+        }
+
         var now = Instant.now();
         var expiresIn = 300L;
 
-        var scopes = func.getLs_roles()
+        var scopes = fun.getLs_roles()
                 .stream()
                 .map(RoleModel::getName)
                 .collect(Collectors.joining(" "));
 
         var claims = JwtClaimsSet.builder()
                 .issuer("back-end")
-                .subject(func.getId().toString())
+                .subject(fun.getId().toString())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
                 .claim("scope", scopes)

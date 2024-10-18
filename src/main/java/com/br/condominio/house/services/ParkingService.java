@@ -24,7 +24,6 @@ public class ParkingService {
     }
 
     public List<ParkingModel> findAll() {
-
         return repository.findAll();
     }
 

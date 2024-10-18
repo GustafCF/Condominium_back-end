@@ -24,11 +24,11 @@ public class ApartmentModel implements Serializable {
     private String block;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "ap")
+    @ManyToMany(mappedBy = "ap", cascade = CascadeType.ALL)
     private Set<ResidentModel> occupant = new HashSet<>();
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "ap_son")
+    @ManyToMany(mappedBy = "ap_son", cascade = CascadeType.ALL)
     private Set<DependentModel> occ_son = new HashSet<>();
 
     @JsonIgnore

@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.br.condominio.house.models.EmailModel;
+import com.br.condominio.house.models.FunctionaryModel;
 import com.br.condominio.house.models.dto.EmailDto;
 import com.br.condominio.house.services.EmailService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
@@ -24,6 +30,16 @@ public class EmailController {
     @Autowired
     private EmailService service;
 
+    @Operation(
+            summary = "Enviar email",
+            description = "Endpoint de envio de emails"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Success!",
+                content = @Content(schema = @Schema(implementation = FunctionaryModel.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorized!",
+                content = @Content(mediaType = "application/json"))
+    })
     @PostMapping(value = "/sendin-email")
     public ResponseEntity<EmailModel> sendingEmail(@RequestBody @Valid EmailDto emailDto) {
         EmailModel emailModel = new EmailModel();

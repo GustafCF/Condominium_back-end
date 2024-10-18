@@ -20,7 +20,6 @@ public class RoleModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     public Long id;
     @Column(name = "nome")

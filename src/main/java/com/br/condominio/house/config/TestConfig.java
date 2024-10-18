@@ -11,12 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.br.condominio.house.models.ApartmentModel;
 import com.br.condominio.house.models.CarModel;
 import com.br.condominio.house.models.DependentModel;
+import com.br.condominio.house.models.FunctionaryModel;
 import com.br.condominio.house.models.ParkingModel;
 import com.br.condominio.house.models.ResidentModel;
 import com.br.condominio.house.models.RoleModel;
 import com.br.condominio.house.repositories.ApartmentRepository;
 import com.br.condominio.house.repositories.CarRepository;
 import com.br.condominio.house.repositories.DependentRepository;
+import com.br.condominio.house.repositories.FunctionaryRepository;
 import com.br.condominio.house.repositories.ParkingRepository;
 import com.br.condominio.house.repositories.ResidentRepository;
 import com.br.condominio.house.repositories.RoleRepository;
@@ -26,16 +28,18 @@ import com.br.condominio.house.repositories.RoleRepository;
 public class TestConfig implements CommandLineRunner {
 
     private final ResidentRepository residentRepository;
+    private final FunctionaryRepository functionaryRepository;
     private final CarRepository carRepository;
     private final DependentRepository dependentRepository;
     private final ApartmentRepository apartmentRepository;
     private final ParkingRepository parkingRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder; 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public TestConfig(ResidentRepository residentRepository, CarRepository carRepository, DependentRepository dependentRepository,
+    public TestConfig(ResidentRepository residentRepository, FunctionaryRepository functionaryRepository, CarRepository carRepository, DependentRepository dependentRepository,
             ApartmentRepository apartmentRepository, ParkingRepository parkingRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.residentRepository = residentRepository;
+        this.functionaryRepository = functionaryRepository;
         this.carRepository = carRepository;
         this.dependentRepository = dependentRepository;
         this.apartmentRepository = apartmentRepository;
@@ -52,6 +56,26 @@ public class TestConfig implements CommandLineRunner {
         dependentRepository.deleteAll();
         residentRepository.deleteAll();
         apartmentRepository.deleteAll();
+
+        // RoleModel rl1 = new RoleModel(1L, "admin");
+        // RoleModel rl2 = new RoleModel(2L, "basic");
+        // roleRepository.saveAll(Arrays.asList(rl1, rl2));
+        var roleAdmin = roleRepository.findByName(RoleModel.Values.ADMIN.name());
+        var userAdmin = functionaryRepository.findByUsername("admin");
+
+        userAdmin.ifPresentOrElse(
+                user -> {
+                    System.out.println("admin ja existe");
+                },
+                () -> {
+                    var user = new FunctionaryModel();
+                    user.setUsername("admin");
+                    user.setPassword(bCryptPasswordEncoder.encode("123"));
+                    user.getLs_roles().add(roleAdmin);
+                    functionaryRepository.save(user);
+                    System.out.println("Create admin");
+                }
+        );
 
         ApartmentModel p1 = new ApartmentModel(101, "A");
         ApartmentModel p2 = new ApartmentModel(102, "A");
@@ -84,14 +108,12 @@ public class TestConfig implements CommandLineRunner {
 
         parkingRepository.saveAll(Arrays.asList(pk1, pk2, pk3, pk4, pk5, pk6, pk7, pk8, pk9, pk10, pk11, pk12, pk13));
 
+        var basicRole = roleRepository.findByName(RoleModel.Values.BASIC.name());
+
         ResidentModel r1 = new ResidentModel(null, "Mariana", "Huyla Alves Miranda Ribeiro", LocalDate.of(2002, 8, 30), 22, true, "44453671172", "56048536151", "HuylaMary@gmail.com", "may", bCryptPasswordEncoder.encode("123"));
         ResidentModel r2 = new ResidentModel(null, "Gustavo", "Cesar Franco", LocalDate.of(2001, 2, 1), 23, true, "122560127", "50388175133", "gustavocerro3@gmail.com", "gus", bCryptPasswordEncoder.encode("123"));
         ResidentModel r3 = new ResidentModel(null, "Vitória", "Higino", LocalDate.of(2002, 9, 11), 22, true, "171928192", "39699335106", "vitória@gmail.com", "vi", bCryptPasswordEncoder.encode("123"));
         ResidentModel r4 = new ResidentModel(null, "Pedro", "Henrique Ramos Cardoso", LocalDate.of(2002, 1, 11), 22, true, "120850485", "44453671172", "pedro@gmail.com", "pedro", bCryptPasswordEncoder.encode("123"));
-
-        residentRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
-
-        var basicRole = roleRepository.findByName(RoleModel.Values.BASIC.name());
 
         r1.getRoles().add(basicRole);
         r2.getRoles().add(basicRole);
@@ -101,8 +123,6 @@ public class TestConfig implements CommandLineRunner {
         residentRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
 
         DependentModel m1 = new DependentModel(null, "Verônica", "Alves Franco", LocalDate.of(2024, 12, 25), 0);
-
-        dependentRepository.save(m1);
 
         m1.getFathers().addAll(Arrays.asList(r1, r2));
 

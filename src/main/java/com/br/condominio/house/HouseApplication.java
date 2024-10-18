@@ -41,7 +41,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
         ),
         tags = {
             @Tag(name = "Funcionários", description = "Endpoints relacionados a funcionários"),
-            @Tag(name = "Login", description = "Endpoints para autenticação")
+            @Tag(name = "Login", description = "Endpoints para autenticação"),
+            @Tag(name = "Arquivos", description = "Endpoints para arquivos")
         }
 )
 public class HouseApplication {
