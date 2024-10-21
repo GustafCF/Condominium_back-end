@@ -13,13 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TB_TIMESTAMP")
+@Table(name = "TB_TIMESTAMP_MODEL")
 public class TimestampModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private LocalDateTime ticketTime;
 
@@ -31,13 +31,17 @@ public class TimestampModel implements Serializable {
     @JoinColumn(name = "id_ticketTime_depent")
     private DependentModel dependent;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "id_ticketTime_functionary")
+    private FunctionaryModel func;
+
     public TimestampModel() {
     }
 
     public TimestampModel(UUID id, LocalDateTime ticketTime) {
         this.id = id;
         this.ticketTime = ticketTime;
+
     }
 
     public UUID getId() {
@@ -72,6 +76,14 @@ public class TimestampModel implements Serializable {
         this.dependent = dependent;
     }
 
+    public FunctionaryModel getFunc() {
+        return func;
+    }
+
+    public void setFunc(FunctionaryModel func) {
+        this.func = func;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -101,5 +113,5 @@ public class TimestampModel implements Serializable {
         }
         return true;
     }
-    
+
 }

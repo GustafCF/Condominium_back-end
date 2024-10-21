@@ -8,7 +8,9 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.br.condominio.house.models.dto.LoginRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -58,6 +61,10 @@ public class FunctionaryModel implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<RoleModel> ls_roles = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "func", cascade = CascadeType.ALL)
+    private List<TimestampModel> ticket = new ArrayList<>();
 
     public FunctionaryModel() {
     }
@@ -159,6 +166,10 @@ public class FunctionaryModel implements Serializable {
 
     public List<RoleModel> getLs_roles() {
         return ls_roles;
+    }
+
+    public List<TimestampModel> getTicket() {
+        return ticket;
     }
 
     public boolean LoginValidationFunc(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {

@@ -2,7 +2,6 @@ package com.br.condominio.house.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,7 +53,6 @@ public class AuthController {
         @ApiResponse(responseCode = "403", description = "Usuário ou senha inválidados",
                 content = @Content(mediaType = "application/json")),})
     @PostMapping(value = "/login/func")
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<LoginResponse> loginfunc(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = service.loginFunc(loginRequest);
         return ResponseEntity.ok().body(loginResponse);

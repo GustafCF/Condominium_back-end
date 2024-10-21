@@ -17,7 +17,7 @@ public class TimestampController {
     @Autowired
     private TimestampService service;
 
-    @PostMapping(value = "/access")
+    @PostMapping(value = "/access/{id}")
     public ResponseEntity<TimestampModel> ticket(@PathVariable Long id) {
         TimestampModel time = service.times(id);
         return ResponseEntity.ok().body(time);

@@ -3,12 +3,9 @@ package com.br.condominio.house.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import com.br.condominio.house.models.ParkingModel;
-import com.br.condominio.house.repositories.FunctionaryRepository;
 import com.br.condominio.house.repositories.ParkingRepository;
 import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 
@@ -16,11 +13,9 @@ import com.br.condominio.house.services.exceptions.ResourceNotFoundException;
 public class ParkingService {
 
     private final ParkingRepository repository;
-    private final FunctionaryRepository functionaryRepository;
 
-    public ParkingService(ParkingRepository repository, FunctionaryRepository functionaryRepository) {
+    public ParkingService(ParkingRepository repository) {
         this.repository = repository;
-        this.functionaryRepository = functionaryRepository;
     }
 
     public List<ParkingModel> findAll() {
