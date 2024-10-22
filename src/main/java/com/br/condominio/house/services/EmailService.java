@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class EmailService {
-
+    
     private EmailRepository emailRepository;
     private JavaMailSender emailSender;
 

@@ -1,20 +1,20 @@
 services:
   mysql:
     image: mysql
-    restart: unless-stopped
-    # env_file: ./.env
-    build:
-      context: "./"
-      dockerfile: Dockerfile
+    # restart: unless-stopped
     ports:
       - "3306:3306"
+    expose:
+      - "3306"
     environment:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=123
       - MYSQL_DATABASE=mydb
       - MYSQL_ROOT_PASSWORD=123
     volumes:
-      - mysqlvloume:/var/lib/mysql  
+      - mysqlvolume:/var/lib/mysql
+    networks:
+      - app-network    
 
   phpmyadmin:
     image: phpmyadmin
@@ -24,36 +24,46 @@ services:
       - PMA_HOST=mysql
     depends_on:
       - mysql
+    command: ["./scripts/wait-for-it.sh", "mysql:3306", "--", "phpmyadmin"]
+    volumes:
+      - ./scripts/wait-for-it.sh:/usr/local/bin/wait-for-it.sh  
+
   
   app:
+    image: openjdk:22
+    container_name: condominium_app
     depends_on:
-      - mysql
-    image: springboot  
+      - mysql  
     build: 
       context: "./"
       dockerfile: Dockerfile
-    working_dir: usr/src/house
-    container_name: condominium_backend
+    working_dir: /usr/src/house 
     restart: on-failure
-    # env_file: ./.env
     ports:
-      - 8080:8080
+      - "8080:8080"
+    expose:
+      - "8080"  
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/mydb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/mydb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=123
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_PROFILE_ACTIVE=test
-      - SPRING_APPLICATION_ADMIN_ENABLED=false
+      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - JWT_PUBLIC_KEY=classpath:newkey.pub
+      - JWT_PRIVATE_KEY=classpath:newkey.key
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=g.cesarfranco7@gmail.com
+      - SPRING_MAIL_PASSWORD=ilga xnpt ntop kvjn
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
     volumes:
-      - ./src/:/opt/house
-  
+      - ./src/:/usr/src/house  
+    networks:
+      - app-network
+
 volumes:
   mysqlvolume:
 
-    
-
-
-
-
-
+networks:
+  app-network:

@@ -46,7 +46,7 @@ public class ResidentModel implements Serializable {
     private LocalDate dataNascimento;
     @Column(name = "Idade")
     @Min(value = 0, message = "A idade não pode ser negativa")
-    private int age;
+    private Integer age;
     @Column(name = "Proprietario")
     private Boolean proprietario;
     @Column(name = "Resigtro_GERAL")
@@ -81,14 +81,14 @@ public class ResidentModel implements Serializable {
     private List<RoleModel> roles = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy="res", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "res", cascade = CascadeType.ALL)
     private List<TimestampModel> ticket = new ArrayList<>();
 
     public ResidentModel() {
     }
 
     public ResidentModel(Long id, String residentName, String lastName, LocalDate dataNascimento,
-            @Min(value = 0, message = "A idade não pode ser negativa") int age, Boolean proprietario, String rg,
+            @Min(value = 0, message = "A idade não pode ser negativa") Integer age, Boolean proprietario, String rg,
             @CPF(message = "CPF inválido") String cpf, String email, String username, String password) {
         this.id = id;
         this.residentName = residentName;
@@ -135,11 +135,11 @@ public class ResidentModel implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

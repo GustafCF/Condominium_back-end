@@ -42,7 +42,7 @@ public class DependentModel implements Serializable {
     private LocalDate dateBirth;
     @Column(name = "Idade")
     @Min(value = 0, message = "A idade não pode ser negativa")
-    private int age;
+    private Integer age;
 
     @JsonIgnore
     @OneToMany(mappedBy = "dependent", cascade = CascadeType.ALL)
@@ -62,7 +62,7 @@ public class DependentModel implements Serializable {
     }
 
     public DependentModel(Long id, String name, String lastName, LocalDate dateBirth,
-            @Min(value = 0, message = "A idade não pode ser negativa") int age) {
+            @Min(value = 0, message = "A idade não pode ser negativa") Integer age) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -102,8 +102,12 @@ public class DependentModel implements Serializable {
         this.dateBirth = dateBirth;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public List<ResidentModel> getFathers() {

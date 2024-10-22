@@ -120,13 +120,34 @@ public class ResidentService {
     }
 
     private void updateData(ResidentModel entity, ResidentModel obj) {
-        entity.setResidentName(obj.getResidentName());
-        entity.setLastName(obj.getLastName());
-        entity.setDataNascimento(obj.getDataNascimento());
-        entity.setAge(obj.getAge());
-        entity.setProprietario(obj.getProprietario());
-        entity.setRg(obj.getRg());
-        entity.setCpf(obj.getCpf());
+        if (obj.getResidentName() != null && !obj.getResidentName().isEmpty()) {
+            entity.setResidentName(obj.getResidentName());
+        }
+        if (obj.getLastName() != null && !obj.getLastName().isEmpty()) {
+            entity.setLastName(obj.getLastName());
+        }
+        if (obj.getDataNascimento() != null) {
+            entity.setDataNascimento(obj.getDataNascimento());
+        }
+        if (obj.getAge() != null) {
+            entity.setAge(obj.getAge());
+        }
+        if (obj.getProprietario() != null) {
+            entity.setProprietario(obj.getProprietario());
+        }
+        if (obj.getRg() != null && !obj.getRg().isEmpty() && !obj.getRg().isBlank()) {
+            entity.setRg(obj.getRg());
+        }
+        if (obj.getCpf() != null && !obj.getCpf().isEmpty() && !obj.getCpf().isBlank()) {
+            entity.setCpf(obj.getCpf());
+        }
+        if (obj.getEmail() != null && !obj.getEmail().isEmpty()) {
+            obj.setEmail(obj.getEmail());
+        }
+        if (obj.getUsername() != null && !obj.getUsername().isEmpty() && !obj.getUsername().isBlank()) {
+            obj.setUsername(obj.getUsername());
+        }
+
     }
 
 }
