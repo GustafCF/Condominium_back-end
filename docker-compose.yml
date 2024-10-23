@@ -1,11 +1,9 @@
 services:
-  mysql:
+  mysql_db:
     image: mysql
     # restart: unless-stopped
     ports:
       - "3306:3306"
-    expose:
-      - "3306"
     environment:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=123
@@ -21,19 +19,18 @@ services:
     ports: 
       - "8000:80"
     environment:
-      - PMA_HOST=mysql
+      - PMA_HOST=mysql_db  
     depends_on:
-      - mysql
-    command: ["./scripts/wait-for-it.sh", "mysql:3306", "--", "phpmyadmin"]
-    volumes:
-      - ./scripts/wait-for-it.sh:/usr/local/bin/wait-for-it.sh  
+      - mysql_db
+    networks:
+      - app-network
 
   
   app:
     image: openjdk:22
     container_name: condominium_app
     depends_on:
-      - mysql  
+      - mysql_db  
     build: 
       context: "./"
       dockerfile: Dockerfile
@@ -41,10 +38,8 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-    expose:
-      - "8080"  
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/mydb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/mydb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=123
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
